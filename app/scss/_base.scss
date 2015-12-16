@@ -28,6 +28,10 @@ body {
 	background: #ebebe0;
 }
 
+div {
+	cursor: default;
+}
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
@@ -36,8 +40,12 @@ body {
 	@include container(white);
 }
 
+#chosen-chords-container {
+	height: 70px;
+}
+
 .all-chords, .allowed-chords, .allowed-notes {
-	@include item(navy, white);
+	@include item(black, white);
 
 	font-size: 1.4em;
 	float: left;
@@ -46,7 +54,7 @@ body {
 }
 
 .chosen-chords {
-	@include item(darkgreen, white);
+	@include item(black, white);
 
 	font-size: 3em;
 	float: left;
@@ -56,11 +64,10 @@ body {
 
 .allowed-notes {
 	width: 50px;
-	background: darkred;
 }
 
 .keys {
-	@include item(#669999, white);
+	@include item(black, white);
 
 	font-size: 2em;
 	float: left;
@@ -78,3 +85,45 @@ body {
 	padding: 5px;
 }
 
+.amaj{
+	background: #006600;
+}
+.amin {
+	background: #339933;
+}
+.bmaj {
+	background: #003366;
+}
+.bmin {
+	background: #336699;
+}
+.cmaj {
+	background: #cc0000;
+}
+.cmin {
+	background: #ff5050;
+}
+.dmaj {
+	background: #cc3300;
+}
+.dmin {
+	background: #ff9900;
+}
+.emaj {
+	background: #0033cc;
+}
+.emin {
+	background: #0066ff;
+}
+.gmaj {
+	background: #660066;
+}
+.gmin {
+	background: #9900cc;
+}
+.fmaj {
+	background: #800000;
+}
+.fmin {
+	background: #993333;
+}
