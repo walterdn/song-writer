@@ -62,8 +62,18 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	};
 	
 	$scope.addChord = function(chord) {
-		$scope.inProgress = true;
-		$scope.chosenChords.push(chord);
+		if($scope.chosenChords.length < 4) {
+			$scope.inProgress = true;
+			$scope.chosenChords.push(chord);
+			filterKeys();
+			filterNotes();
+			filterChords();
+		}
+	};
+
+	$scope.removeChord = function(chord) {
+		var index = $scope.chosenChords.indexOf(chord);
+		$scope.chosenChords.splice(index, 1);
 		filterKeys();
 		filterNotes();
 		filterChords();

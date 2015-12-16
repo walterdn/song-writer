@@ -32,8 +32,8 @@ body {
 	@include container(white);
 }
 
-.all-chords, .chosen-chords, .allowed-chords, .allowed-notes {
-	@include item(black, white);
+.all-chords, .allowed-chords, .allowed-notes {
+	@include item(navy, white);
 	
 	font-size: 1.4em;
 	float: left;
@@ -41,12 +41,22 @@ body {
 	padding: 3px;
 }
 
+.chosen-chords {
+	@include item(darkgreen, white);
+
+	font-size: 3em;
+	float: left;
+	margin: 5px;
+	width: 24%;
+}
+
 .allowed-notes {
 	width: 50px;
+	background: darkred;
 }
 
 .keys {
-	@include item(black, white);
+	@include item(#669999, white);
 	
 	font-size: 2em;
 	float: left;

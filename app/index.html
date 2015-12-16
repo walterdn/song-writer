@@ -37,7 +37,9 @@
 
 				<div> Chosen Chords: </div>
 				<div id="chosen-chords-container">
-					<div class="chosen-chords" data-ng-repeat="chord in chosenChords track by $index">{{chord.name}}</div>
+					<div class="chosen-chords" data-ng-repeat="chord in chosenChords track by $index" data-ng-click="removeChord(chord)">
+						{{chord.name}}
+					</div>
 				</div>
 
 			</div>
