@@ -28,13 +28,17 @@ body {
 	background: #ebebe0;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 #all-chords-container, #allowed-chords-container, #chosen-chords-container, #allowed-keys-container, #allowed-notes-container {
 	@include container(white);
 }
 
 .all-chords, .allowed-chords, .allowed-notes {
 	@include item(navy, white);
-	
+
 	font-size: 1.4em;
 	float: left;
 	margin: 5px;
@@ -57,7 +61,7 @@ body {
 
 .keys {
 	@include item(#669999, white);
-	
+
 	font-size: 2em;
 	float: left;
 	margin: 7px;
