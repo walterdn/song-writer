@@ -1,7 +1,7 @@
 require('angular/angular');
 var angular = window.angular;
 
-var songApp = angular.module('songwriter', []);
+var songApp = angular.module('songwriter', ['ngDraggable']);
 songApp.controller('songwriterController', ['$scope', function($scope) {
 	var keys = [
 		{name: 'C Major', notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B']},
@@ -60,6 +60,20 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 
 		$scope.initializeKeys();
 	};
+
+	$scope.assignClassName = function(string) {
+		var className = string.charAt(0);
+		if(string.indexOf('maj') != -1) className += 'maj';
+		if(string.indexOf('min') != -1) className += 'min';
+		return className;
+	}
+
+	$scope.swapPositions = function(index, chord) {
+		var otherChord = $scope.chosenChords[index];
+		var otherIndex = $scope.chosenChords.indexOf(chord);
+		$scope.chosenChords[index] = chord;
+		$scope.chosenChords[otherIndex] = otherChord;
+	}
 	
 	$scope.addChord = function(chord) {
 		if($scope.chosenChords.length < 4) {
@@ -77,6 +91,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		filterKeys();
 		filterNotes();
 		filterChords();
+		if ($scope.chosenChords.length == 0) $scope.inProgress = false;
 	};
 
 	$scope.initializeKeys = function() {
@@ -88,13 +103,12 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 
 	function filterKeys() {
 		var notesUsed = [];
-
 		$scope.chosenChords.forEach(function(chord) {
 			notesUsed.push(chord.notes);
 		});
-
-		notesUsed = [].concat.apply([], notesUsed); //flattens noteUsed array
-
+		notesUsed = [].concat.apply([], notesUsed); //flattens notesUsed array
+		//notesUsed contains every note which is contained in each of your chosen chords
+		//then populates allowed keys array with keys which contain every note used
 		$scope.allowedKeys = [];
 		keys.forEach(function(key) {
 			if(isArrayContained(notesUsed, key.notes)) {
