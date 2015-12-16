@@ -1,0 +1,66 @@
+@mixin center {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@mixin container($bg) {
+	background: $bg;
+
+	display: flex;
+	flex-wrap: wrap;
+	border: 2px solid black;
+	border-radius: 3px;
+	margin: 10px;
+}
+
+@mixin item($bg, $color) {
+	background: $bg;
+	color: $color;
+
+	border: 1px solid black;
+	border-radius: 3px;
+	text-align: center;
+}
+
+body {
+	font-family: "Lucida Console", Monaco, monospace;
+	background: #ebebe0;
+}
+
+#all-chords-container, #allowed-chords-container, #chosen-chords-container, #allowed-keys-container, #allowed-notes-container {
+	@include container(white);
+}
+
+.all-chords, .chosen-chords, .allowed-chords, .allowed-notes {
+	@include item(black, white);
+	
+	font-size: 1.4em;
+	float: left;
+	margin: 5px;
+	padding: 3px;
+}
+
+.allowed-notes {
+	width: 50px;
+}
+
+.keys {
+	@include item(black, white);
+	
+	font-size: 2em;
+	float: left;
+	margin: 7px;
+	padding: 5px;
+}
+
+.reset-button-container {
+	@include center;
+}
+
+.reset-button {
+	@include item(darkgray, white);
+	font-size: 3em;
+	padding: 5px;
+}
+
