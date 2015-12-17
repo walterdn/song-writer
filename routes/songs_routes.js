@@ -7,8 +7,8 @@ var handleError = require(__dirname + '/../lib/handle_server_error');
 var songsRouter = module.exports = exports = express.Router();
 songsRouter.use(bodyParser);
 
-bearsRouter.get('/allsongs', function(req, res) {
-  Bear.find({}, function(err, data) {
+songsRouter.get('/allsongs', function(req, res) {
+  Song.find({}, function(err, data) {
     if (err) return handleError(err, res);
 
     res.json(data);
