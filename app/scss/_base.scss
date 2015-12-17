@@ -36,7 +36,7 @@ div {
   display: none !important;
 }
 
-#all-chords-container, #allowed-chords-container, #chosen-chords-container, #allowed-keys-container, #allowed-notes-container {
+#all-chords-container, #allowed-chords-container, #chosen-chords-container, #allowed-keys-container, #allowed-notes-container, #chosen-notes-container {
 	@include container(white);
 }
 
@@ -44,8 +44,12 @@ div {
 	height: 70px;
 }
 
-.all-chords, .allowed-chords, .allowed-notes {
-	@include item(black, white);
+#chosen-notes-container {
+	height: 40px;
+}
+
+.all-chords, .allowed-chords, .allowed-notes, .chosen-notes {
+	@include item(navy, white);
 
 	font-size: 1.4em;
 	float: left;
@@ -54,7 +58,7 @@ div {
 }
 
 .chosen-chords {
-	@include item(black, white);
+	@include item(navy, white);
 
 	font-size: 3em;
 	float: left;
@@ -66,8 +70,12 @@ div {
 	width: 50px;
 }
 
+.chosen-notes {
+	width: 11%;
+}
+
 .keys {
-	@include item(black, white);
+	@include item(white, black);
 
 	font-size: 2em;
 	float: left;
@@ -75,55 +83,63 @@ div {
 	padding: 5px;
 }
 
-.reset-button-container {
+.play-button-container {
 	@include center;
 }
 
-.reset-button {
-	@include item(darkgray, white);
+.play-button {
+	@include item(black, white);
 	font-size: 3em;
 	padding: 5px;
+	margin: 9px;
 }
 
-.amaj{
+.play-button-options {
+	@include item(black, white);
+	font-size: 1.3em;
+	padding: 5px;
+	margin: 9px;
+}
+
+.amaj, .a{
 	background: #006600;
 }
 .amin {
 	background: #339933;
 }
-.bmaj {
+.bmaj, .b {
 	background: #003366;
 }
 .bmin {
 	background: #336699;
 }
-.cmaj {
+.cmaj, .c {
 	background: #cc0000;
 }
 .cmin {
 	background: #ff5050;
 }
-.dmaj {
+.dmaj, .d {
 	background: #cc3300;
 }
 .dmin {
 	background: #ff9900;
 }
-.emaj {
+.emaj, .e {
 	background: #0033cc;
 }
 .emin {
 	background: #0066ff;
 }
-.gmaj {
-	background: #660066;
-}
-.gmin {
-	background: #9900cc;
-}
-.fmaj {
+.fmaj, .f {
 	background: #800000;
 }
 .fmin {
 	background: #993333;
+}
+.gmaj, .g {
+	background: #660066;
+}
+.gmin {
+	background: #9900cc;
 }
