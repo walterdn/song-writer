@@ -17,6 +17,15 @@ describe('song routes', function() {
   });
 
   it('should be able to create a song', function(done) {
+    var songData = {name: 'test song'};
+    chai.request(url).
+    post('/songs')
+    .send(songData)
+    .end(function(err, res) {
+      expect(err).to.eql(null);
+      expect(res.body.name).to.eql('test song');
+      expect(res.body).to.have.property('_id');
+    });
     done();
   });
 
