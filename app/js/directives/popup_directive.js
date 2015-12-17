@@ -1,4 +1,4 @@
-module.exports = exports = function(app) {
+module.exports = function(app) {
   app.directive('popupDirective', function() {
     return {
       restrict: 'E',

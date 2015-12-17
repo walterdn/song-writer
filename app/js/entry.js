@@ -5,7 +5,6 @@ require('angular-base64');
 var angular = window.angular;
 
 var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64']);
-require('./filters/filters')(songWriterApp);
 require('./services/services')(songWriterApp);
 require('./controllers/controllers')(songWriterApp);
 require('./directives/directives')(songWriterApp);
