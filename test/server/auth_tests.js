@@ -77,7 +77,7 @@ describe('the auth routes', function() {
     });
   });
 
-  describe('when user tries to signup with blank info', function() {
+  describe('when user tries to signup with blank user', function() {
     it('should throw an error with blank username', function(done) {
       var dummyUser = {username: '', password: 'testing123'};
       chai.request('localhost:3000')
