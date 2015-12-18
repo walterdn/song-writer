@@ -18,8 +18,8 @@ describe('song routes', function() {
 
   it('should be able to create a song', function(done) {
     var songData = {name: 'test song'};
-    chai.request(url).
-    post('/songs')
+    chai.request(url)
+    .post('ongs')
     .send(songData)
     .end(function(err, res) {
       expect(err).to.eql(null);
