@@ -19,11 +19,11 @@ songWriterApp.config(['$routeProvider', function($route) {
       controller: 'SongsController'
     })
     .when('/signup', {
-      templateUrl: '/templates/popup_directive_template.html',
+      templateUrl: '/templates/auth_view.html',
       controller: 'SignupController'
     })
     .when('/signin', {
-      templateUrl: '/templates/popup_directive_template.html',
+      templateUrl: '/templates/auth_view.html',
       controller: 'SigninController'
     })
     .when('/allsongs', {

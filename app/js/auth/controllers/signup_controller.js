@@ -1,7 +1,8 @@
 module.exports = function(app) {
   app.controller('SignupController', ['$scope', '$http', '$cookies', '$location', function($scope, $http, $cookies, $location) {
-    $scope.headingText = 'Signup to create sweet jams';
-    $scope.buttonText = 'Create User';
+    $scope.headingText = 'Sign up to create sweet jams';
+    $scope.buttonText = 'Sign up';
+    $scope.userRelation = 'Have an Account?'
     $scope.authenticate = function(user) {
       $http.post('/api/signup', user)
         .then(function(res){
