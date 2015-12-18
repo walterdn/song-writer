@@ -86,5 +86,26 @@ describe('song routes', function() {
       });
     });
 
+    it('should disallow unauthorized changes', function(done) {
+      chai.request(url)
+      .put('/songs/' + this.song._id)
+      .send({chords: ['C','G','F', 'G']})
+      .end(function(err, res) {
+        expect(err).to.eql(null);
+        expect(res.error.text).to.eql('{"msg":"not allowed"}');
+        done();
+      });
+    });
+
+    it('should disallow unauthorized deletions', function(done) {
+      chai.request(url)
+      .delete('/songs/' + this.song._id)
+      .send({token: 'random token'})
+      .end(function(err, res) {
+        expect(err).to.eql(null);
+        expect(res.error.text).to.eql('{"msg":"not allowed"}');
+        done();
+      });
+    });
   });
 });
