@@ -14,7 +14,7 @@ authRouter.post('/signup', jsonParser, function(req, res) {
 
   user.save(function(err, data) {
     if (err) return handleError(err, res);
-    //profit
+
     data.generateToken(function(err, token) {
       res.json({token});
     });
