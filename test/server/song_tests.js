@@ -76,7 +76,14 @@ describe('song routes', function() {
     });
 
     it('should be able to delete a song', function(done) {
-      done();
+      chai.request(url)
+      .delete('/songs/' + this.song._id)
+      .send({token: this.token})
+      .end(function(err, res) {
+        expect(err).to.eql(null);
+        expect(res.body.msg).to.eql('Song Deleted');
+        done();
+      });
     });
 
   });

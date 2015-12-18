@@ -39,7 +39,7 @@ songsRouter.put('/songs/:id', eatAuth, function(req, res) {
 
 
 songsRouter.delete('/songs/:id', eatAuth, function(req, res) {
-  Song.remove({_id: req.params}, function(err) {
+  Song.remove({_id: req.params.id}, function(err) {
     if (err) return handleError(err, res);
 
     res.json({msg: 'Song Deleted'});
