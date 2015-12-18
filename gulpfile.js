@@ -38,7 +38,7 @@ gulp.task('servertests', function() {
 });
 
 gulp.task('jsFiles:dev', function() {
-  return gulp.src('app/js/*.js')
+  return gulp.src('app/js/**/*.js')
   .pipe(webpack({
     output: {
       filename: 'bundle.js'
