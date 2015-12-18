@@ -44,7 +44,7 @@ gulp.task('jsFiles:dev', function() {
       filename: 'bundle.js'
     }
   }))
-  .pipe(gulp.dest('build/js/'));
+  .pipe(gulp.dest('build/'));
 });
 
 gulp.task('build:dev', ['jsFiles:dev', 'htmlFiles:dev', 'cssFiles:dev']);
