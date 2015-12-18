@@ -5,7 +5,7 @@ var sass = require('gulp-sass');
 var minifyCSS = require('gulp-minify-css');
 
 gulp.task('htmlFiles:dev', function() {
-  gulp.src('app/*.html')
+  gulp.src('app/**/*.html')
   .pipe(gulp.dest('build/'));
 });
 
