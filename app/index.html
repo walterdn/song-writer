@@ -55,10 +55,11 @@
 			</div>
 
 			<div> Chosen Notes: </div>
-			<div id="chosen-notes-container" ng-drop="true" ng-drop-success="addNote($data)">
-				<div ng-repeat="note in chosenNotes track by $index" 
+			<div id="chosen-notes-container">
+				<div ng-repeat="note in recordedNotes track by $index" 
 						 ng-click="playNote(note)" ng-dblclick="removeNote(note)"
-						 class="chosen-notes" ng-class="assignClassName(note.name)">
+						 class="chosen-notes" ng-class="assignClassName(note.name)"
+						 ng-attr-id="{{note.firstLetter}}{{note.time}}">
 					{{note.name}}	
 				</div>
 			</div>
@@ -67,8 +68,9 @@
 				<button class="play-button" ng-click="playSong()">Play</button>
 				<div class="play-button-options">
 					<label>loop this many times</label><input id="loopNumber" type="number" min="1" max="4" value="1">
-					<label>milliseconds per chord</label><input id="tempo" type="number"	min="700" max="1500" value="1100">
 					<button ng-click="togglePreviewing()">toggle chord previewing on click</button>
+					<button ng-click="toggleRecording()">record next play</button>
+
 				</div>
 			</div>
 
