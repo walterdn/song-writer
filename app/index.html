@@ -59,7 +59,7 @@
 				<div ng-repeat="note in recordedNotes track by $index" 
 						 ng-click="playNote(note)" ng-dblclick="removeNote(note)"
 						 class="chosen-notes" ng-class="assignClassName(note.name)"
-						 ng-attr-id="{{note.firstLetter}}{{note.time}}">
+						 ng-attr-id="{{note.name[0]}}{{note.time}}">
 					{{note.name}}	
 				</div>
 			</div>

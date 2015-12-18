@@ -71,11 +71,25 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.allowedChords = [];
 	$scope.chosenChords = [];
 	$scope.recordedNotes = [];
+	
 	var recording = false;
-
 	var timeData = [];
 	var noteData = [];
 	var melody = [];
+
+	$(document).keypress(function(e) {
+		if (e.which == 97) $scope.playNote($scope.allowedNotes2[0]);
+		if (e.which == 115) $scope.playNote($scope.allowedNotes2[1]);
+		if (e.which == 100) $scope.playNote($scope.allowedNotes2[2]);
+		if (e.which == 102) $scope.playNote($scope.allowedNotes2[3]);
+		if (e.which == 103) $scope.playNote($scope.allowedNotes2[4]);
+		if (e.which == 104) $scope.playNote($scope.allowedNotes2[5]);
+		if (e.which == 106) $scope.playNote($scope.allowedNotes2[6]);
+		if (e.which == 107) $scope.playNote($scope.allowedNotes2[7]);
+		if (e.which == 108) $scope.playNote($scope.allowedNotes2[8]);
+		
+		if (e.which == 32) $scope.playSong();
+	});
 
 	$scope.playChord = function(chord) { //plays a single chord
 		if (previewing) chord.audio.play(); 
@@ -87,8 +101,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			var d = new Date();
 			timeData.push(d);
 			noteData.push(note);
-			// $scope.recordedNotes.push(note);
-			// angular.element('#'+note.name).css('color', 'gray');
 		}
 	}
 
@@ -107,16 +119,17 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		for(i=0; i<noteTimes.length; i++) {
 			melody.push(noteData[i]); 
 			melody[melody.length-1].time = noteTimes[i];
-			melody[melody.length-1].firstLetter = melody[melody.length-1].name.charAt(0);
 		}
 		for(i=0; i<melody.length; i++) {
 			$scope.recordedNotes.push(melody[i]);
 		}
 		for(i=0; i<melody.length; i++) {
-			var distance = (Math.floor(((melody[i].time)/4400)*1500)).toString() + 'px';
-			angular.element('#' + melody[i].firstLetter + melody[i].time).css('left', distance);
+			var distance = ((melody[i].time)/44).toString() + '%';
+			angular.element('#' + melody[i].name[0] + melody[i].time).css('left', distance);
 			$scope.$apply();
 		}
+		var distance2 = ((melody[0].time)/44).toString() + '%';
+		angular.element('#' + melody[0].name[0] + melody[0].time).css('left', distance2);
 	}
 
 	$scope.togglePreviewing = function() { //toggles previewing chord on click
@@ -275,7 +288,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			$scope.allowedKeys.push(key)
 		});
 	};
-
 
 //end of main song app controller body
 }]);
