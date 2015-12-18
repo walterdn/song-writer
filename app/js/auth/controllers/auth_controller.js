@@ -15,7 +15,7 @@ module.exports = function(app) {
       $scope.token = null;
       $scope.currentUser = null;
       $cookies.remove('token');
-      $location.path('/signup');
+      $location.path('/signin');
     };
   }]);
 };

@@ -4,10 +4,11 @@ require('angular-cookies');
 require('angular-base64');
 var angular = window.angular;
 
-var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64']);
+var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64', 'ngDraggable']);
 require('./services/services')(songWriterApp);
 require('./controllers/controllers')(songWriterApp);
 require('./directives/directives')(songWriterApp);
+require('./client')(songWriterApp);
 
 require('./songs/songs')(songWriterApp);
 require('./auth/auth')(songWriterApp);
@@ -15,8 +16,8 @@ require('./auth/auth')(songWriterApp);
 songWriterApp.config(['$routeProvider', function($route) {
   $route
     .when('/songs', {
-      templateUrl: '/templates/songs_view.html',
-      controller: 'SongsController'
+      templateUrl: '/templates/musical_view.html',
+      controller: 'MusicController'
     })
     .when('/signup', {
       templateUrl: '/templates/auth_view.html',
@@ -31,6 +32,6 @@ songWriterApp.config(['$routeProvider', function($route) {
       controller: 'AllSongsController'
     })
     .otherwise({
-      redirectTo: '/signup'
+      redirectTo: '/signin'
     })
 }]);

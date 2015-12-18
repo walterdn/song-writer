@@ -4,8 +4,10 @@ var sounds = require('./sounds');
 var triads = sounds.triads;
 var noteSounds = sounds.notes;
 
-var songApp = angular.module('songwriter', ['ngDraggable']);
-songApp.controller('songwriterController', ['$scope', function($scope) {
+
+
+module.exports = function(app) {
+	app.controller('MusicController', ['$scope', function($scope) {
 	var previewing = true;
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
@@ -73,7 +75,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.chosenNotes = [];
 
 	$scope.playChord = function(chord) { //plays a single chord
-		if (previewing) chord.audio.play();		
+		if (previewing) chord.audio.play();
 	};
 
 	$scope.playNote = function(note) { //plays a single note
@@ -92,13 +94,13 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     	(function(index) {
         setTimeout(function() {$scope.chosenChords[index%4].audio.play()}, i * tempo);
     	})(i);
-		}	
+		}
 
 		for (var i = 0; i < $scope.chosenNotes.length * loopNumber; i++) {
     	(function(index) {
         setTimeout(function() {$scope.chosenNotes[index%8].audio.play()}, i * (tempo/2));
     	})(i);
-		}	
+		}
 	};
 
 	$scope.assignClassName = function(string) { //if input is string 'g sharp min', returns string 'gmin'
@@ -128,7 +130,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		var index = $scope.chosenNotes.indexOf(note);
 		$scope.chosenNotes.splice(index, 1);
 	}
-	
+
 	$scope.addChord = function(chord) { //adds chord to chosenChords array, re-renders avaible chords/notes
 		$scope.inProgress = true;
 		if ($scope.chosenChords.length < 4) {
@@ -162,7 +164,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		keys.forEach(function(key) {
 			if (isArrayContained(notesUsed, key.notes)) {
 				$scope.allowedKeys.push(key);
-			} 
+			}
 		});
 	}
 
@@ -187,7 +189,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				if ($scope.chosenChords.indexOf(chord) == -1) {
 					chord.chosen = false;
 					$scope.allowedChords.push(chord);
-				} 
+				}
 			}
 		});
 	}
@@ -216,6 +218,12 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		});
 	};
 
+	/////////////////////////////////////////////Begin new features///////
+
+
 
 //end of main song app controller body
 }]);
+
+};
+
