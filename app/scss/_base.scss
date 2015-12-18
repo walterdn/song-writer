@@ -9,9 +9,10 @@
 
 	display: flex;
 	flex-wrap: wrap;
-	border: 2px solid black;
-	border-radius: 3px;
-	margin: 10px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	margin-top: 8px;
+	margin-bottom: 8px;
 }
 
 @mixin item($bg, $color) {
@@ -19,7 +20,7 @@
 	color: $color;
 
 	border: 1px solid black;
-	border-radius: 3px;
+	border-radius: 2px;
 	text-align: center;
 }
 
@@ -41,14 +42,15 @@ div {
 }
 
 #chosen-chords-container {
-	height: 70px;
+	flex-wrap: nowrap;
+	height: 72px;
 }
 
 #chosen-notes-container {
-	height: 40px;
+	height: 50px;
 }
 
-.all-chords, .allowed-chords, .allowed-notes, .chosen-notes {
+.all-chords, .allowed-chords, .allowed-notes {
 	@include item(navy, white);
 
 	font-size: 1.4em;
@@ -58,12 +60,16 @@ div {
 }
 
 .chosen-chords {
-	@include item(navy, white);
-
-	font-size: 3em;
+	color: white;
+	border: 1px solid black;
+	text-align: center;
+	font-family: 'Trebuchet MS', Helvetica, sans-serif;
+	font-size: 2.8em;
 	float: left;
-	margin: 5px;
-	width: 24%;
+	height: 64px;
+	width: 25%;
+	padding-top: 7px;
+	overflow: hidden;
 }
 
 .allowed-notes {
@@ -71,9 +77,14 @@ div {
 }
 
 .chosen-notes {
-	width: 15px;
-	margin-bottom: 3px;
+	color: white;
+	text-align: center;
+	padding-top: 11px ;
+	float: left;
+	width: 30px;
+	font-size: 1.4em;
 	position: absolute;
+	height: 39px;
 }
 
 .keys {
