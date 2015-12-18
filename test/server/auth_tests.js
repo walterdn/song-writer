@@ -68,7 +68,7 @@ describe('the auth routes', function() {
     it('should err when incorrect password is passed', function(done) {
       chai.request('localhost:3000')
       .get('/api/signin')
-      .auth(this.user.username, 'noWay')
+      .auth(this.user.username, 'notEvenClose')
       .end(function(err, res) {
         res.text = JSON.parse(res.text);
         expect(err).to.eql(null);

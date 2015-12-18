@@ -10,42 +10,69 @@ var url = 'localhost:3000/api';
 var Song = require(__dirname + '/../../models/song');
 
 describe('song routes', function() {
+
+  before(function(done) {
+    var testUser = {username: 'test', password: 'testing123'};
+    chai.request(url)
+      .post('/signup')
+      .send(testUser)
+      .end(function(err, res) {
+        this.token = JSON.parse(res.text).token;
+        expect(err).to.eql(null);
+        done();
+    }.bind(this));
+  });
+
   after(function(done) {
     mongoose.connection.db.dropDatabase(function() {
       done();
     });
   });
 
-  it('should be able to create a song', function(done) {
-    var songData = {name: 'test song'};
-    chai.request(url)
-    .post('ongs')
-    .send(songData)
-    .end(function(err, res) {
-      expect(err).to.eql(null);
-      expect(res.body.name).to.eql('test song');
-      expect(res.body).to.have.property('_id');
-      done();
+  describe('the songs routes', function() {
+    it('should be able to create a song', function(done) {
+      var songData = {name: 'test song', token: this.token};
+      chai.request(url)
+      .post('/songs')
+      .send(songData)
+      .end(function(err, res) {
+        expect(err).to.eql(null);
+        expect(res.body.name).to.eql('test song');
+        expect(res.body).to.have.property('_id');
+        done();
+      });
     });
-  });
 
   it('should be able to retrieve listed songs', function(done) {
+    chai.request(url)
+    .get('/allsongs')
+    .end(function(err, res) {
+    expect(err).to.eql(null);
+    expect(Array.isArray(res.body)).to.eql(true);
     done();
+    });
   });
+});
 
   describe('routes that have a song already registered', function() {
     beforeEach(function(done) {
-      var testSong = new Song({chords: ['C','F','G','C']});
-      testSong.save(function(err, data) {
+      (new Song({chords: ['C','F','G','C'], token: this.token}))
+      .save(function(err, data) {
         expect(err).to.eql(null);
-        this.testSong = data;
+        this.song = data;
         done();
       }.bind(this));
     });
 
     it('should be able to update a song', function(done) {
       chai.request(url)
-      done();
+      .put('/songs/' + this.song._id)
+      .send({chords: ['C','G','F', 'G'], token: this.token})
+      .end(function(err, res) {
+        expect(err).to.eql(null);
+        expect(res.body.msg).to.eql('Song Updated');
+        done();
+      });
     });
 
     it('should be able to delete a song', function(done) {
