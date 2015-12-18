@@ -25,8 +25,8 @@ describe('song routes', function() {
       expect(err).to.eql(null);
       expect(res.body.name).to.eql('test song');
       expect(res.body).to.have.property('_id');
+      done();
     });
-    done();
   });
 
   it('should be able to retrieve listed songs', function(done) {
