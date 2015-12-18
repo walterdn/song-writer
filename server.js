@@ -10,6 +10,8 @@ process.env.APP_SECRET = process.env.APP_SECRET || 'changechangechangeme';
 
 app.use(express.static(__dirname + '/build'));
 
+app.use('/api', authRouter);
+app.use('/api', songsRouter);
 
 app.listen(port, function() {
   console.log('Server up on port ' + port);
