@@ -16,7 +16,7 @@ authRouter.post('/signup', jsonParser, function(req, res) {
     if (err) return handleError(err, res);
 
     data.generateToken(function(err, token) {
-      res.json({token});
+      res.json({token: token});
     });
   });
 });
@@ -44,7 +44,7 @@ authRouter.get('/signin', basicHttp, function(req, res) {
     }
 
     user.generateToken(function(err, token) {
-      res.json({token});
+      res.json({token: token});
    });
   });
 });

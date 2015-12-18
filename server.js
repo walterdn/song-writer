@@ -1,17 +1,17 @@
 var express = require('express');
 var app = express();
-var fs = require('fs');
 var mongoose = require('mongoose');
-
+var port = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/song_app');
+var songsRouter = require(__dirname + '/routes/songs_routes');
+var authRouter = require(__dirname + '/routes/auth_routes');
 
-app.use(express.static('build'));
+process.env.APP_SECRET = process.env.APP_SECRET || 'changechangechangeme';
 
-app.get('/', function (req, res) {
-  res.send((fs.readFileSync(__dirname + '/build/index.html')).toString());
-});
+app.use(express.static(__dirname + '/build'));
 
-app.listen(3000, function() {
-  console.log('Server up.');
+
+app.listen(port, function() {
+  console.log('Server up on port ' + port);
 });
 
