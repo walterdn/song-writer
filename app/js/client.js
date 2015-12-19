@@ -100,9 +100,9 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     sound.start(0);
 	};
 
+
 	$scope.playChord = function(chord){
 		var name = removeSpaces(chord.name);
-		console.log(name); 
 		bufferLoader = new BufferLoader(
         context,
         [
@@ -112,6 +112,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     );
 
     bufferLoader.load();
+
 	}; 
 
 	$scope.playNote = function(note){
@@ -147,28 +148,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		});
 		$scope.$apply();
 
-		// $scope.recordedNotes.forEach(function(note) {
-		// 	var distance = parseFloat(note.time/44).toFixed(2).toString() + '%';
-		// 	// alert(distance);
-		// 	// $('#' + note.id).css('left', distance);
-		// 	angular.element('#' + note.id).css('left', distance);
-		// });
-
-		// $scope.$apply();
-
-
-		// for(i=0; i<melody.length; i++) {
-
-		// 	// $scope.recordedNotes.push(melody[i]);
-		// 	alert(melody[i]);
-		// }
-		// for(i=0; i<melody.length; i++) {
-		// 	var distance = ((melody[i].time)/44).toString() + '%';
-		// 	angular.element('#' + melody[i].name[0] + melody[i].time).css('left', distance);
-		// 	$scope.$apply();
-		// }
-		// var distance2 = ((melody[0].time)/44).toString() + '%';
-		// angular.element('#' + melody[0].name[0] + melody[0].time).css('left', distance2);
 	}
 
 	$scope.togglePreviewing = function() { //toggles previewing chord on click
@@ -184,11 +163,18 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		});
 	}
 
+	
 	function playChords(loops) {
 		for(i=0; i<loops; i++) {
 			$scope.chosenChords.forEach(function(chord, index) {
 				setTimeout(function() {
-					$scope.playChord(chord);
+					var name = removeSpaces(chord.name);
+					angular.element('.' + name).css('color', 'black');
+					setTimeout(function() {
+						angular.element('.' + name).css('color', 'white');
+					}, 1100);
+				
+					$scope.playChord(chord); 
 				}, index*1100 + (i*4400));
 			});
 		}
