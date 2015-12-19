@@ -54,7 +54,8 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.chosenChords = [];
 
 	$scope.melody = [];
-	$scope.recording = false;
+	var recording = false;
+	$scope.recordingNext = false;
 
 	$scope.context; 
 	$scope.bufferLoader;
@@ -105,11 +106,10 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     );
 
     bufferLoader.load();
-
 	}; 
 
 	$scope.playNote = function(note){
-	  if ($scope.recording) {
+	  if (recording) {
 	  	var msFromStart = Math.round(new Date() - startTime);
 	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
 			$scope.melody.push({
@@ -121,26 +121,25 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 
 		var name = changeName(note);	
-			bufferLoader = new BufferLoader(
-	        context,
-	        [
-	        "notes/" + name + ".wav"
-	        ],
-	        $scope.finishedLoading
-	    );
+		bufferLoader = new BufferLoader(
+        context,
+        [
+        "notes/" + name + ".wav"
+        ],
+        $scope.finishedLoading
+    );
 
-	    bufferLoader.load();
-	    name += 'note';
-	    console.log(name); 
-	    angular.element('.' + name).css('background-color', '#FFC30D');
-				setTimeout(function() {
-					angular.element('.' + name).css('background-color', '#000080');
-				}, 140);
-
+    bufferLoader.load();
+    name += 'note';
+    console.log(name); 
+    angular.element('.' + name).css('background-color', '#FFC30D');
+			setTimeout(function() {
+				angular.element('.' + name).css('background-color', '#000080');
+			}, 140);
 	};
 
 	$scope.toggleRecording = function() {
-		$scope.recording = true;
+		$scope.recordingNext = true;
 	}
 
 	$scope.clearMelody = function() { //clears melody
@@ -162,22 +161,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	function playChords() {
 		$scope.chosenChords.forEach(function(chord, index) {
 			setTimeout(function() {
-
-				var name = removeSpaces(chord.name);
-
-				//name stays name, we don't do any more checking
-				if(name.length === 4){
-					//do nothing..
-				}
-				//for flats  
-				else if(name.length === 8){
-					name = name.charAt(0) + name.charAt(5) + name.charAt(6) + name.charAt(7);
-				}
-				//for sharps
-				else if(name.length === 9){
-					name = name.charAt(0) + name.charAt(6) + name.charAt(7) + name.charAt(8);
-				}
-				 
+				var name = $scope.assignClassName(chord.name);
 				angular.element('.' + name).css('color', 'black');
 				setTimeout(function() {
 					angular.element('.' + name).css('color', 'white');
@@ -186,17 +170,18 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				$scope.playChord(chord); 
 			}, index*1100);
 		});
-		
 	}
 
 	$scope.playSong = function() { //plays your chords + melody
 		var loops = $('input[id="loopNumber"]').val();
 		
-		if ($scope.recording) {
+		if ($scope.recordingNext) {
+			$scope.recordingNext = false;
+			recording = true;
 			melody = [];
 			startTime = new Date();
 			setTimeout(function() {
-				$scope.recording = false;
+				recording = false;
 			}, 4400);
 		}
 
