@@ -48,8 +48,8 @@ div {
 
 #chosen-notes-container {
 	height: 50px;
+	position: relative;
 }
-
 
 .all-chords, .allowed-chords, .allowed-notes {
 	@include item(navy, white);
@@ -81,7 +81,6 @@ div {
 	color: white;
 	text-align: center;
 	padding-top: 11px ;
-	float: left;
 	width: 30px;
 	font-size: 1.4em;
 	position: absolute;
