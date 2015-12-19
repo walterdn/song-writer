@@ -118,19 +118,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				distance: distance
 			});
 			$scope.$apply();
-<<<<<<< HEAD
 		}
-
-		var name = changeName(note);	
-		bufferLoader = new BufferLoader(
-        context,
-        [
-        "notes/" + name + ".wav"
-        ],
-        $scope.finishedLoading
-    );
-=======
-		}	
 		var name = changeName(note);
 			bufferLoader = new BufferLoader(
 	        context,
@@ -146,15 +134,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				setTimeout(function() {
 					angular.element('.' + name).css('background-color', '#000080');
 				}, 140);
->>>>>>> pollackDec19
-
-    bufferLoader.load();
-    name += 'note';
-    console.log(name); 
-    angular.element('.' + name).css('background-color', '#FFC30D');
-			setTimeout(function() {
-				angular.element('.' + name).css('background-color', '#000080');
-			}, 140);
 	};
 
 	$scope.playBackNote = function(note){
@@ -205,10 +184,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		$scope.chosenChords.forEach(function(chord, index) {
 			setTimeout(function() {
 				var name = $scope.assignClassName(chord.name);
-<<<<<<< HEAD
-=======
-				 
->>>>>>> pollackDec19
+
 				angular.element('.' + name).css('color', 'black');
 				setTimeout(function() {
 					angular.element('.' + name).css('color', 'white');
@@ -223,13 +199,8 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		var loops = $('input[id="loopNumber"]').val();
 		
 		if ($scope.recordingNext) {
-<<<<<<< HEAD
 			$scope.recordingNext = false;
 			recording = true;
-=======
-			$scope.recordingNext = false; 
-			recording = true; 
->>>>>>> pollackDec19
 			melody = [];
 			startTime = new Date();
 			setTimeout(function() {
