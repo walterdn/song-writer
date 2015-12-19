@@ -54,7 +54,8 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.chosenChords = [];
 
 	$scope.melody = [];
-	$scope.recording = false;
+	var recording = false;
+	$scope.recordingNext = false;
 
 	$scope.context; 
 	$scope.bufferLoader;
@@ -109,7 +110,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	}; 
 
 	$scope.playNote = function(note){
-	  if ($scope.recording) {
+	  if (recording) {
 	  	var msFromStart = Math.round(new Date() - startTime);
 	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
 			$scope.melody.push({
@@ -151,7 +152,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	};
 
 	$scope.toggleRecording = function() {
-		$scope.recording = true;
+		$scope.recordingNext = true;
 	}
 
 	$scope.clearMelody = function() { //clears melody
@@ -200,11 +201,13 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.playSong = function() { //plays your chords + melody
 		var loops = $('input[id="loopNumber"]').val();
 		
-		if ($scope.recording) {
+		if ($scope.recordingNext) {
+			$scope.recordingNext = false; 
+			recording = true; 
 			melody = [];
 			startTime = new Date();
 			setTimeout(function() {
-				$scope.recording = false;
+				recording = false;
 			}, 4400);
 		}
 
