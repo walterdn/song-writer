@@ -56,8 +56,9 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.chosenNotes = [];
 
 	$scope.recordedNotes = [];
-	var recording = false;
+	$scope.recording = false;
 
+	var startTime;
 	var timeData = [];
 	var noteData = [];
 	var melody = [];
@@ -81,12 +82,12 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	});
 
 	function removeSpaces (str){
-		return str.replace(/\s/g, '');
+		return str.replace(/\s/g, '').toLowerCase();
 	};
 
 	function changeName(str){
 		//find a # in the name and replace it with shrp
-		str = str.replace("#", "shrp");
+		str = str.replace("#", "shrp").toLowerCase();
 		return str;
 	};
 
@@ -97,7 +98,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     sound.connect(context.destination);
   	//Play 
     sound.start(0);
-    
 	};
 
 	$scope.playChord = function(chord){
@@ -115,7 +115,10 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	}; 
 
 	$scope.playNote = function(note){
-		var name = changeName(note);
+	  if ($scope.recording) {
+			melody.push({name: note, time: new Date()});
+		}
+		var name = changeName(note);	
 		console.log(name); 
 		if(previewing){
 			bufferLoader = new BufferLoader(
@@ -128,39 +131,44 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 
 	    bufferLoader.load();
 	  }
-	  if (recording) {
-			var d = new Date();
-			timeData.push(d);
-			noteData.push(note);
-		}
 	};
 
 	$scope.toggleRecording = function() {
-
-		if (recording) recording = false;
-		else recording = true;
+		if ($scope.recording) $scope.recording = false;
+		else $scope.recording = true;
 	}
 
 	function processRecording() {
-		var noteTimes = [];
-		for(i=1; i<timeData.length; i++) {
-			noteTimes.push(timeData[i] - timeData[0]);
-		}
-		melody = [];
-		for(i=0; i<noteTimes.length; i++) {
-			melody.push(noteData[i]); 
-			melody[melody.length-1].time = noteTimes[i];
-		}
-		for(i=0; i<melody.length; i++) {
-			$scope.recordedNotes.push(melody[i]);
-		}
-		for(i=0; i<melody.length; i++) {
-			var distance = ((melody[i].time)/44).toString() + '%';
-			angular.element('#' + melody[i].name[0] + melody[i].time).css('left', distance);
-			$scope.$apply();
-		}
-		var distance2 = ((melody[0].time)/44).toString() + '%';
-		angular.element('#' + melody[0].name[0] + melody[0].time).css('left', distance2);
+		melody.forEach(function(note) {
+			note.time = Math.round(note.time - startTime);
+			note.id = note.name[0] + note.time;
+			note.distance = parseFloat(note.time/44).toFixed(2).toString() + '%';
+			$scope.recordedNotes.push(note);
+		});
+		$scope.$apply();
+
+		// $scope.recordedNotes.forEach(function(note) {
+		// 	var distance = parseFloat(note.time/44).toFixed(2).toString() + '%';
+		// 	// alert(distance);
+		// 	// $('#' + note.id).css('left', distance);
+		// 	angular.element('#' + note.id).css('left', distance);
+		// });
+
+		// $scope.$apply();
+
+
+		// for(i=0; i<melody.length; i++) {
+
+		// 	// $scope.recordedNotes.push(melody[i]);
+		// 	alert(melody[i]);
+		// }
+		// for(i=0; i<melody.length; i++) {
+		// 	var distance = ((melody[i].time)/44).toString() + '%';
+		// 	angular.element('#' + melody[i].name[0] + melody[i].time).css('left', distance);
+		// 	$scope.$apply();
+		// }
+		// var distance2 = ((melody[0].time)/44).toString() + '%';
+		// angular.element('#' + melody[0].name[0] + melody[0].time).css('left', distance2);
 	}
 
 	$scope.togglePreviewing = function() { //toggles previewing chord on click
@@ -171,7 +179,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	function playMelody(loops) {
 		melody.forEach(function(note) {
 			setTimeout(function() {
-				$scope.playNote(note);
+				$scope.playNote(note.name);
 			}, note.time);
 		});
 	}
@@ -189,12 +197,11 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.playSong = function() { //plays your chord progression + melody
 		var loops = $('input[id="loopNumber"]').val();
 		
-		if (recording) {
-			timeData = [];
-			var d = new Date();
-			timeData.push(d);
+		if ($scope.recording) {
+			melody = [];
+			startTime = new Date();
 			setTimeout(function() {
-				recording = false;
+				$scope.recording = false;
 				processRecording();
 			}, (loops * 4400));
 		}
