@@ -118,9 +118,8 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				distance: distance
 			});
 			$scope.$apply();
-		}
-
-		var name = changeName(note);	
+		}	
+		var name = changeName(note);
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
@@ -130,13 +129,25 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	    );
 
 	    bufferLoader.load();
-	    name += 'note';
-	    console.log(name); 
+	    name +='note'
 	    angular.element('.' + name).css('background-color', '#FFC30D');
 				setTimeout(function() {
 					angular.element('.' + name).css('background-color', '#000080');
 				}, 140);
 
+	};
+
+	$scope.playBackNote = function(note){
+		var name = changeName(note);
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "notes/" + name + ".wav"
+	        ],
+	        $scope.finishedLoading
+	    );
+
+	    bufferLoader.load();
 	};
 
 	$scope.toggleRecording = function() {
@@ -154,7 +165,18 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	function playMelody() {
 		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
-				$scope.playNote(note.name);
+				var test = note.name; 
+				test = test.toLowerCase(); 
+				if(test.length > 1){
+					test = test.charAt(0); 
+				}
+				var name = $scope.newNote(note);  
+				//changes text color of specific note being played
+				angular.element('.' + test + '.'+name).css('color', 'black');
+				setTimeout(function() {
+					angular.element('.' + test + '.'+name).css('color', 'white');
+				}, 140);
+				$scope.playBackNote(note.name);
 			}, note.time);
 		});
 	}
@@ -162,21 +184,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	function playChords() {
 		$scope.chosenChords.forEach(function(chord, index) {
 			setTimeout(function() {
-
-				var name = removeSpaces(chord.name);
-
-				//name stays name, we don't do any more checking
-				if(name.length === 4){
-					//do nothing..
-				}
-				//for flats  
-				else if(name.length === 8){
-					name = name.charAt(0) + name.charAt(5) + name.charAt(6) + name.charAt(7);
-				}
-				//for sharps
-				else if(name.length === 9){
-					name = name.charAt(0) + name.charAt(6) + name.charAt(7) + name.charAt(8);
-				}
+				var name = $scope.assignClassName(chord.name);
 				 
 				angular.element('.' + name).css('color', 'black');
 				setTimeout(function() {
@@ -223,6 +231,12 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 		string += 'note'; 
 		return string; 
+	}
+
+	$scope.newNote = function(note){
+		var rename = note.name[0] + note.time; 
+		return rename; 
+
 	}
 
 	$scope.swapPositions = function(index, chord) { //swap position of two chords when you drag a chord onto another chord
