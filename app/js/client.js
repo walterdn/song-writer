@@ -121,35 +121,33 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 
 		var name = changeName(note);	
-		bufferLoader = new BufferLoader(
-      context,
-      ["notes/" + name + ".wav"],
-      $scope.finishedLoading
-    );
+		if(previewing){
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "notes/" + name + ".wav"
+	        ],
+	        $scope.finishedLoading
+	    );
 
-	  bufferLoader.load();
+	    bufferLoader.load();
+	    name += 'note';
+	    console.log(name); 
+	    angular.element('.' + name).css('background-color', '#FFC30D');
+				setTimeout(function() {
+					angular.element('.' + name).css('background-color', '#000080');
+				}, 140);
+	  }
+
 	};
 
 	$scope.toggleRecording = function() {
 		$scope.recording = true;
 	}
 
-<<<<<<< HEAD
-	function processRecording() {
-		melody.forEach(function(note) {
-			note.time = Math.round(note.time - startTime);
-			note.id = note.name[0] + note.time;
-			note.distance = parseFloat(note.time/44).toFixed(2).toString() + '%';
-			$scope.recordedNotes.push(note);
-		});
-		$scope.$apply();
-
-	}
-=======
 	$scope.clearMelody = function() { //clears melody
 		$scope.melody = [];
 	};
->>>>>>> origin/dec19
 
 	$scope.clearChords = function() {
 		$scope.chosenChords = [];
@@ -162,14 +160,27 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			}, note.time);
 		});
 	}
-
-<<<<<<< HEAD
 	
 	function playChords(loops) {
 		for(i=0; i<loops; i++) {
 			$scope.chosenChords.forEach(function(chord, index) {
 				setTimeout(function() {
+
 					var name = removeSpaces(chord.name);
+
+					//name stays name, we don't do any more checking
+					if(name.length === 4){
+						//do nothing..
+					}
+					//for flats  
+					else if(name.length === 8){
+						name = name.charAt(0) + name.charAt(5) + name.charAt(6) + name.charAt(7);
+					}
+					//for sharps
+					else if(name.length === 9){
+						name = name.charAt(0) + name.charAt(6) + name.charAt(7) + name.charAt(8);
+					}
+					 
 					angular.element('.' + name).css('color', 'black');
 					setTimeout(function() {
 						angular.element('.' + name).css('color', 'white');
@@ -179,14 +190,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				}, index*1100 + (i*4400));
 			});
 		}
-=======
-	function playChords() {
-		$scope.chosenChords.forEach(function(chord, index) {
-			setTimeout(function() {
-				$scope.playChord(chord);
-			}, index*1100);
-		});
->>>>>>> origin/dec19
 	}
 
 	$scope.playSong = function() { //plays your chords + melody
@@ -214,6 +217,15 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		if (string.indexOf('maj') != -1) className += 'maj';
 		if (string.indexOf('min') != -1) className += 'min';
 		return className;
+	}
+
+	$scope.setNoteClass = function(string){
+		string = string.toLowerCase();
+		if(string.length > 1){
+			string = string.charAt(0) + "shrp"; 
+		}
+		string += 'note'; 
+		return string; 
 	}
 
 	$scope.swapPositions = function(index, chord) { //swap position of two chords when you drag a chord onto another chord
