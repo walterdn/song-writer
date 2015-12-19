@@ -100,9 +100,9 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     
 	};
 
+
 	$scope.playChord = function(chord){
 		var name = removeSpaces(chord.name);
-		console.log(name); 
 		bufferLoader = new BufferLoader(
         context,
         [
@@ -112,11 +112,11 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
     );
 
     bufferLoader.load();
+
 	}; 
 
 	$scope.playNote = function(note){
 		var name = changeName(note);
-		console.log(name); 
 		if(previewing){
 			bufferLoader = new BufferLoader(
 	        context,
@@ -132,11 +132,11 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			var d = new Date();
 			timeData.push(d);
 			noteData.push(note);
+
 		}
 	};
 
 	$scope.toggleRecording = function() {
-
 		if (recording) recording = false;
 		else recording = true;
 	}
@@ -171,16 +171,24 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	function playMelody(loops) {
 		melody.forEach(function(note) {
 			setTimeout(function() {
+				console.log('note ' + note);
 				$scope.playNote(note);
 			}, note.time);
 		});
 	}
 
+	
 	function playChords(loops) {
 		for(i=0; i<loops; i++) {
 			$scope.chosenChords.forEach(function(chord, index) {
 				setTimeout(function() {
-					$scope.playChord(chord);
+					var name = removeSpaces(chord.name);
+					angular.element('.' + name).css('color', 'black');
+					setTimeout(function() {
+						angular.element('.' + name).css('color', 'white');
+					}, 1100);
+				
+					$scope.playChord(chord); 
 				}, index*1100 + (i*4400));
 			});
 		}
