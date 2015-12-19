@@ -118,6 +118,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				distance: distance
 			});
 			$scope.$apply();
+<<<<<<< HEAD
 		}
 
 		var name = changeName(note);	
@@ -128,6 +129,24 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
         ],
         $scope.finishedLoading
     );
+=======
+		}	
+		var name = changeName(note);
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "notes/" + name + ".wav"
+	        ],
+	        $scope.finishedLoading
+	    );
+
+	    bufferLoader.load();
+	    name +='note'
+	    angular.element('.' + name).css('background-color', '#FFC30D');
+				setTimeout(function() {
+					angular.element('.' + name).css('background-color', '#000080');
+				}, 140);
+>>>>>>> pollackDec19
 
     bufferLoader.load();
     name += 'note';
@@ -136,6 +155,19 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			setTimeout(function() {
 				angular.element('.' + name).css('background-color', '#000080');
 			}, 140);
+	};
+
+	$scope.playBackNote = function(note){
+		var name = changeName(note);
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "notes/" + name + ".wav"
+	        ],
+	        $scope.finishedLoading
+	    );
+
+	    bufferLoader.load();
 	};
 
 	$scope.toggleRecording = function() {
@@ -153,7 +185,18 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	function playMelody() {
 		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
-				$scope.playNote(note.name);
+				var test = note.name; 
+				test = test.toLowerCase(); 
+				if(test.length > 1){
+					test = test.charAt(0); 
+				}
+				var name = $scope.newNote(note);  
+				//changes text color of specific note being played
+				angular.element('.' + test + '.'+name).css('color', 'black');
+				setTimeout(function() {
+					angular.element('.' + test + '.'+name).css('color', 'white');
+				}, 140);
+				$scope.playBackNote(note.name);
 			}, note.time);
 		});
 	}
@@ -162,6 +205,10 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		$scope.chosenChords.forEach(function(chord, index) {
 			setTimeout(function() {
 				var name = $scope.assignClassName(chord.name);
+<<<<<<< HEAD
+=======
+				 
+>>>>>>> pollackDec19
 				angular.element('.' + name).css('color', 'black');
 				setTimeout(function() {
 					angular.element('.' + name).css('color', 'white');
@@ -176,8 +223,13 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		var loops = $('input[id="loopNumber"]').val();
 		
 		if ($scope.recordingNext) {
+<<<<<<< HEAD
 			$scope.recordingNext = false;
 			recording = true;
+=======
+			$scope.recordingNext = false; 
+			recording = true; 
+>>>>>>> pollackDec19
 			melody = [];
 			startTime = new Date();
 			setTimeout(function() {
@@ -208,6 +260,12 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 		string += 'note'; 
 		return string; 
+	}
+
+	$scope.newNote = function(note){
+		var rename = note.name[0] + note.time; 
+		return rename; 
+
 	}
 
 	$scope.swapPositions = function(index, chord) { //swap position of two chords when you drag a chord onto another chord
