@@ -57,7 +57,7 @@
 
 			<div> Chosen Notes: </div>
 			<div id="chosen-notes-container">
-				<div ng-repeat="note in recordedNotes track by $index" 
+				<div ng-repeat="note in melody track by $index" 
 						 class="chosen-notes" ng-class="assignClassName(note.name)"
 						 ng-style="{'left':'{{note.distance}}'}">
 					{{note.name}}	
@@ -68,7 +68,8 @@
 				<button class="play-button" ng-click="playSong()">Play</button>
 				<div class="play-button-options">
 					<label>loop this many times</label><input id="loopNumber" type="number" min="1" max="4" value="1">
-					<button ng-click="togglePreviewing()">toggle chord previewing on click</button>
+					<button ng-click="clearMelody()">clear melody</button>
+					<button ng-click="clearChords()">clear chords</button>
 					<button ng-if="!recording" ng-click="toggleRecording()">record next play</button>
 
 				</div>

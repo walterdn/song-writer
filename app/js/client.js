@@ -4,8 +4,7 @@ var angular = window.angular;
 
 var songApp = angular.module('songwriter', ['ngDraggable']);
 songApp.controller('songwriterController', ['$scope', function($scope) {
-	var previewing = true;
-
+	var startTime;
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
 		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
@@ -53,15 +52,9 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	$scope.allowedNotes = [];
 	$scope.allowedChords = [];
 	$scope.chosenChords = [];
-	$scope.chosenNotes = [];
 
-	$scope.recordedNotes = [];
+	$scope.melody = [];
 	$scope.recording = false;
-
-	var startTime;
-	var timeData = [];
-	var noteData = [];
-	var melody = [];
 
 	$scope.context; 
 	$scope.bufferLoader;
@@ -117,8 +110,16 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 
 	$scope.playNote = function(note){
 	  if ($scope.recording) {
-			melody.push({name: note, time: new Date()});
+	  	var msFromStart = Math.round(new Date() - startTime);
+	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
+			$scope.melody.push({
+				name: note,
+				time: msFromStart,
+				distance: distance
+			});
+			$scope.$apply();
 		}
+
 		var name = changeName(note);	
 		if(previewing){
 			bufferLoader = new BufferLoader(
@@ -137,37 +138,28 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 					angular.element('.' + name).css('background-color', '#000080');
 				}, 140);
 	  }
+
 	};
 
 	$scope.toggleRecording = function() {
-		if ($scope.recording) $scope.recording = false;
-		else $scope.recording = true;
+		$scope.recording = true;
 	}
 
-	function processRecording() {
-		melody.forEach(function(note) {
-			note.time = Math.round(note.time - startTime);
-			note.id = note.name[0] + note.time;
-			note.distance = parseFloat(note.time/44).toFixed(2).toString() + '%';
-			$scope.recordedNotes.push(note);
-		});
-		$scope.$apply();
-
-	}
-
-	$scope.togglePreviewing = function() { //toggles previewing chord on click
-		if (previewing) previewing = false;
-		else previewing = true;
+	$scope.clearMelody = function() { //clears melody
+		$scope.melody = [];
 	};
 
-	function playMelody(loops) {
-		melody.forEach(function(note) {
+	$scope.clearChords = function() {
+		$scope.chosenChords = [];
+	};
+
+	function playMelody() {
+		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
 				$scope.playNote(note.name);
 			}, note.time);
 		});
 	}
-
 	
 	function playChords(loops) {
 		for(i=0; i<loops; i++) {
@@ -200,7 +192,7 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 	}
 
-	$scope.playSong = function() { //plays your chord progression + melody
+	$scope.playSong = function() { //plays your chords + melody
 		var loops = $('input[id="loopNumber"]').val();
 		
 		if ($scope.recording) {
@@ -208,12 +200,15 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			startTime = new Date();
 			setTimeout(function() {
 				$scope.recording = false;
-				processRecording();
-			}, (loops * 4400));
+			}, 4400);
 		}
 
-		playMelody(loops);
-		playChords(loops);
+		for(i=0; i<loops; i++) {
+			setTimeout(function() {
+				playMelody();
+				playChords();
+			}, (i * 4400));
+		}
 	};
 
 	$scope.assignClassName = function(string) { //if input is string 'g sharp min', returns string 'gmin'
@@ -244,15 +239,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 	}
 
-	$scope.addNote = function(note) { //adds note to chosenNotes array
-		$scope.chosenNotes.push(note);
-	}
-
-	$scope.removeNote = function(note) { //removes note from chosenNotes array
-		var index = $scope.chosenNotes.indexOf(note);
-		$scope.chosenNotes.splice(index, 1);
-	}
-	
 	$scope.addChord = function(chord) { //adds chord to chosenChords array, re-renders avaible chords/notes
 		$scope.inProgress = true;
 		if ($scope.chosenChords.length < 4) {
