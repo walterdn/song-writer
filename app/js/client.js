@@ -121,7 +121,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		}
 
 		var name = changeName(note);	
-		if(previewing){
 			bufferLoader = new BufferLoader(
 	        context,
 	        [
@@ -137,7 +136,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 				setTimeout(function() {
 					angular.element('.' + name).css('background-color', '#000080');
 				}, 140);
-	  }
 
 	};
 
@@ -161,35 +159,34 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		});
 	}
 	
-	function playChords(loops) {
-		for(i=0; i<loops; i++) {
-			$scope.chosenChords.forEach(function(chord, index) {
+	function playChords() {
+		$scope.chosenChords.forEach(function(chord, index) {
+			setTimeout(function() {
+
+				var name = removeSpaces(chord.name);
+
+				//name stays name, we don't do any more checking
+				if(name.length === 4){
+					//do nothing..
+				}
+				//for flats  
+				else if(name.length === 8){
+					name = name.charAt(0) + name.charAt(5) + name.charAt(6) + name.charAt(7);
+				}
+				//for sharps
+				else if(name.length === 9){
+					name = name.charAt(0) + name.charAt(6) + name.charAt(7) + name.charAt(8);
+				}
+				 
+				angular.element('.' + name).css('color', 'black');
 				setTimeout(function() {
-
-					var name = removeSpaces(chord.name);
-
-					//name stays name, we don't do any more checking
-					if(name.length === 4){
-						//do nothing..
-					}
-					//for flats  
-					else if(name.length === 8){
-						name = name.charAt(0) + name.charAt(5) + name.charAt(6) + name.charAt(7);
-					}
-					//for sharps
-					else if(name.length === 9){
-						name = name.charAt(0) + name.charAt(6) + name.charAt(7) + name.charAt(8);
-					}
-					 
-					angular.element('.' + name).css('color', 'black');
-					setTimeout(function() {
-						angular.element('.' + name).css('color', 'white');
-					}, 1100);
-				
-					$scope.playChord(chord); 
-				}, index*1100 + (i*4400));
-			});
-		}
+					angular.element('.' + name).css('color', 'white');
+				}, 1100);
+			
+				$scope.playChord(chord); 
+			}, index*1100);
+		});
+		
 	}
 
 	$scope.playSong = function() { //plays your chords + melody
