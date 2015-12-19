@@ -120,7 +120,6 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 			melody.push({name: note, time: new Date()});
 		}
 		var name = changeName(note);	
-		console.log(name); 
 		if(previewing){
 			bufferLoader = new BufferLoader(
 	        context,
@@ -131,6 +130,12 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 	    );
 
 	    bufferLoader.load();
+	    name += 'note';
+	    console.log(name); 
+	    angular.element('.' + name).css('background-color', '#FFC30D');
+				setTimeout(function() {
+					angular.element('.' + name).css('background-color', '#000080');
+				}, 140);
 	  }
 	};
 
@@ -168,7 +173,22 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		for(i=0; i<loops; i++) {
 			$scope.chosenChords.forEach(function(chord, index) {
 				setTimeout(function() {
+
 					var name = removeSpaces(chord.name);
+
+					//name stays name, we don't do any more checking
+					if(name.length === 4){
+						//do nothing..
+					}
+					//for flats  
+					else if(name.length === 8){
+						name = name.charAt(0) + name.charAt(5) + name.charAt(6) + name.charAt(7);
+					}
+					//for sharps
+					else if(name.length === 9){
+						name = name.charAt(0) + name.charAt(6) + name.charAt(7) + name.charAt(8);
+					}
+					 
 					angular.element('.' + name).css('color', 'black');
 					setTimeout(function() {
 						angular.element('.' + name).css('color', 'white');
@@ -202,6 +222,15 @@ songApp.controller('songwriterController', ['$scope', function($scope) {
 		if (string.indexOf('maj') != -1) className += 'maj';
 		if (string.indexOf('min') != -1) className += 'min';
 		return className;
+	}
+
+	$scope.setNoteClass = function(string){
+		string = string.toLowerCase();
+		if(string.length > 1){
+			string = string.charAt(0) + "shrp"; 
+		}
+		string += 'note'; 
+		return string; 
 	}
 
 	$scope.swapPositions = function(index, chord) { //swap position of two chords when you drag a chord onto another chord

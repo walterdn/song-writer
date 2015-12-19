@@ -28,7 +28,8 @@
 				<div> Allowed Notes: </div>
 				<div id="allowed-notes-container">
 					<div class="allowed-notes" ng-repeat="note in allowedNotes" 
-							 ng-click="playNote(note)" ng-drag="true" ng-drag-data="note">
+							 ng-click="playNote(note)" ng-drag="true" ng-drag-data="note"
+							 ng-class="setNoteClass(note)">
 						{{note}}
 					</div>
 				</div>
