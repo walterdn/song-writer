@@ -15,11 +15,8 @@ songsRouter.get('/allsongs', function(req, res) {
   });
 });
 
-songsRouter.post('/songs', eatAuth, function(req, res) {
+songsRouter.post('/savesong', bodyParser, function(req, res) {
   var newSong = new Song(req.body);
-  newSong.authorId = req.user._id;
-  newSong.author = req.user.username;
-
   newSong.save(function(err, data) {
     if (err) return handleError(err, res);
 

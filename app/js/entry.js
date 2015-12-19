@@ -3,6 +3,7 @@ require('angular-route');
 require('angular-cookies');
 require('angular-base64');
 var angular = window.angular;
+var BufferLoader = require('./buffer-loader');
 
 var songWriterApp = angular.module('SongWriterApp', ['ngRoute', 'ngCookies', 'base64', 'ngDraggable']);
 require('./services/services')(songWriterApp);

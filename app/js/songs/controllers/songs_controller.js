@@ -26,6 +26,10 @@ module.exports = function(app) {
       });
     };
 
+    $scope.create = function(song) {
+      $http.post('/api/savesong', song)
+    }
+
     $scope.update = function(song) {
       song.editing = false;
       $http.put('/api/songs/' + song._id, song)

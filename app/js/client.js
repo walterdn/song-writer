@@ -1,14 +1,12 @@
 require('angular/angular');
 var angular = window.angular;
-var sounds = require('./sounds');
-var triads = sounds.triads;
-var noteSounds = sounds.notes;
+var BufferLoader = require('./buffer-loader');
 
 
 
 module.exports = function(app) {
-	app.controller('MusicController', ['$scope', function($scope) {
-	var previewing = true;
+	app.controller('MusicController', ['$scope', '$http', function($scope, $http) {
+var startTime;
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
 		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
@@ -24,82 +22,199 @@ module.exports = function(app) {
 		{name: 'G Sharp Major', notes: ['G#', 'A#', 'C', 'C#', 'D#', 'F', 'G']}
 	];
 
-	var notes = [
-		{name: 'A', audio: noteSounds.a},
-		{name: 'A#', audio: noteSounds.ashrp},
-		{name: 'B', audio: noteSounds.b},
-		{name: 'C', audio: noteSounds.c},
-		{name: 'C#', audio: noteSounds.cshrp},
-		{name: 'D', audio: noteSounds.d},
-		{name: 'D#', audio: noteSounds.dshrp},
-		{name: 'E', audio: noteSounds.e},
-		{name: 'F', audio: noteSounds.f},
-		{name: 'F#', audio: noteSounds.fshrp},
-		{name: 'G', audio: noteSounds.g},
-		{name: 'G#', audio: noteSounds.gshrp}
-	];
-
 	$scope.chords = [
-		{name: 'a maj', notes: ["A", "C#", "E"], audio: triads.amaj},
-		{name: 'a min', notes: ["A", "C", "E"], audio: triads.amin},
-		{name: 'b flat maj', notes: ["A#", "D", "F"], audio: triads.bflatmaj},
-		{name: 'b flat min', notes: ["A#", "C#", "F"], audio: triads.bflatmin},
-		{name: 'b maj', notes: ["B", "D#", "F#"], audio: triads.bmaj},
-		{name: 'b min', notes: ["B", "D", "F#"], audio: triads.bmin},
-		{name: 'c maj', notes: ['C', 'E', 'G'], audio: triads.cmaj},
-		{name: 'c min', notes: ["C", "D#", "G"], audio: triads.cmin},
-		{name: 'c sharp maj', notes: ["C#", "F", "G#"], audio: triads.csharpmaj},
-		{name: 'c sharp min', notes: ["C#", "E", "G#"], audio: triads.csharpmin},
-		{name: 'd maj', notes: ["D", "F#", "A"], audio: triads.dmaj},
-		{name: 'd min', notes: ["D", "F", "A"], audio: triads.dmin},
-		{name: 'e flat maj', notes: ["D#", "G", "A#"], audio: triads.eflatmaj},
-		{name: 'e flat min', notes: ["D#", "F#", "A#"], audio: triads.eflatmin},
-		{name: 'e maj', notes: ["E", "G#", "B"], audio: triads.emaj},
-		{name: 'e min', notes: ["E", "G", "B"], audio: triads.emin},
-		{name: 'f maj', notes: ["F", "A", "C"], audio: triads.fmaj},
-		{name: 'f min', notes: ["F", "G#", "C"], audio: triads.fmin},
-		{name: 'f sharp maj', notes: ["F#", "A#", "C#"], audio: triads.fsharpmaj},
-		{name: 'f sharp min', notes: ["F#", "A", "C#"], audio: triads.fsharpmin},
-		{name: 'g maj', notes: ["G", "B", "D"], audio: triads.gmaj},
-		{name: 'g min', notes: ["G", "A#", "D"], audio: triads.gmin},
-		{name: 'g sharp maj', notes: ["G#", "C", "D#"], audio: triads.gsharpmaj},
-		{name: 'g sharp min', notes: ["G#", "B", "D#"], audio: triads.gsharpmin}
+		{name: 'c maj', notes: ['C', 'E', 'G']},
+		{name: 'c min', notes: ["C", "D#", "G"]},
+		{name: 'c sharp maj', notes: ["C#", "F", "G#"]},
+		{name: 'c sharp min', notes: ["C#", "E", "G#"]},
+		{name: 'd maj', notes: ["D", "F#", "A"]},
+		{name: 'd min', notes: ["D", "F", "A"]},
+		{name: 'e flat maj', notes: ["D#", "G", "A#"]},
+		{name: 'e flat min', notes: ["D#", "F#", "A#"]},
+		{name: 'e maj', notes: ["E", "G#", "B"]},
+		{name: 'e min', notes: ["E", "G", "B"]},
+		{name: 'f maj', notes: ["F", "A", "C"]},
+		{name: 'f min', notes: ["F", "G#", "C"]},
+		{name: 'f sharp maj', notes: ["F#", "A#", "C#"]},
+		{name: 'f sharp min', notes: ["F#", "A", "C#"]},
+		{name: 'g maj', notes: ["G", "B", "D"]},
+		{name: 'g min', notes: ["G", "A#", "D"]},
+		{name: 'g sharp maj', notes: ["G#", "C", "D#"]},
+		{name: 'g sharp min', notes: ["G#", "B", "D#"]},
+		{name: 'a maj', notes: ["A", "C#", "E"]},
+		{name: 'a min', notes: ["A", "C", "E"]},
+		{name: 'b flat maj', notes: ["A#", "D", "F"]},
+		{name: 'b flat min', notes: ["A#", "C#", "F"]},
+		{name: 'b maj', notes: ["B", "D#", "F#"]},
+		{name: 'b min', notes: ["B", "D", "F#"]}
 	];
 
 	$scope.inProgress = false;
 	$scope.allowedKeys = [];
 	$scope.allowedNotes = [];
-	$scope.allowedNotes2 = [];
 	$scope.allowedChords = [];
 	$scope.chosenChords = [];
-	$scope.chosenNotes = [];
 
-	$scope.playChord = function(chord) { //plays a single chord
-		if (previewing) chord.audio.play();
+	$scope.melody = [];
+	var recording = false;
+	$scope.recordingNext = false;
+
+	$scope.context;
+	$scope.bufferLoader;
+	context = new AudioContext();
+
+	$(document).keypress(function(e) {
+		if (e.which == 97) $scope.playNote($scope.allowedNotes[0]);
+		if (e.which == 115) $scope.playNote($scope.allowedNotes[1]);
+		if (e.which == 100) $scope.playNote($scope.allowedNotes[2]);
+		if (e.which == 102) $scope.playNote($scope.allowedNotes[3]);
+		if (e.which == 103) $scope.playNote($scope.allowedNotes[4]);
+		if (e.which == 104) $scope.playNote($scope.allowedNotes[5]);
+		if (e.which == 106) $scope.playNote($scope.allowedNotes[6]);
+		if (e.which == 107) $scope.playNote($scope.allowedNotes[7]);
+		if (e.which == 108) $scope.playNote($scope.allowedNotes[8]);
+
+		if (e.which == 32) $scope.playSong();
+	});
+
+	function removeSpaces (str){
+		return str.replace(/\s/g, '').toLowerCase();
 	};
 
-	$scope.playNote = function(note) { //plays a single note
-		if (previewing) note.audio.play();
+	function changeName(str){
+		//find a # in the name and replace it with shrp
+		str = str.replace("#", "shrp").toLowerCase();
+		return str;
+	};
+
+	$scope.finishedLoading = function(bufferList) {
+    //Create source for audio context
+    var sound = context.createBufferSource();
+    sound.buffer = bufferList[0];
+    sound.connect(context.destination);
+  	//Play
+    sound.start(0);
+	};
+
+
+	$scope.playChord = function(chord){
+		var name = removeSpaces(chord.name);
+		bufferLoader = new BufferLoader(
+        context,
+        [
+        "chords/" + name + ".wav"
+        ],
+        $scope.finishedLoading
+    );
+
+    bufferLoader.load();
+	};
+
+	$scope.playNote = function(note){
+	  if (recording) {
+	  	var msFromStart = Math.round(new Date() - startTime);
+	  	var distance = parseFloat(msFromStart/44).toFixed(2).toString() + '%';
+			$scope.melody.push({
+				name: note,
+				time: msFromStart,
+				distance: distance
+			});
+			$scope.$apply();
+		}
+		var name = changeName(note);
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "notes/" + name + ".wav"
+	        ],
+	        $scope.finishedLoading
+	    );
+
+	    bufferLoader.load();
+	    name +='note'
+	    angular.element('.' + name).css('background-color', '#FFC30D');
+				setTimeout(function() {
+					angular.element('.' + name).css('background-color', '#000080');
+				}, 140);
+	};
+
+	$scope.playBackNote = function(note){
+		var name = changeName(note);
+			bufferLoader = new BufferLoader(
+	        context,
+	        [
+	        "notes/" + name + ".wav"
+	        ],
+	        $scope.finishedLoading
+	    );
+
+	    bufferLoader.load();
+	};
+
+	$scope.toggleRecording = function() {
+		$scope.recordingNext = true;
 	}
 
-	$scope.togglePreviewing = function() { //toggles previewing chord on click
-		if (previewing) previewing = false;
-		else previewing = true;
+	$scope.clearMelody = function() { //clears melody
+		$scope.melody = [];
 	};
 
-	$scope.playSong = function() { //plays your chord progression + melody
-		var loopNumber = $('input[id="loopNumber"]').val();
-		var tempo = $('input[id="tempo"]').val();
-		for (var i = 0; i < $scope.chosenChords.length * loopNumber; i++) {
-    	(function(index) {
-        setTimeout(function() {$scope.chosenChords[index%4].audio.play()}, i * tempo);
-    	})(i);
+	$scope.clearChords = function() {
+		$scope.chosenChords = [];
+	};
+
+	function playMelody() {
+		$scope.melody.forEach(function(note) {
+			setTimeout(function() {
+				var test = note.name;
+				test = test.toLowerCase();
+				if(test.length > 1){
+					test = test.charAt(0);
+				}
+				var name = $scope.newNote(note);
+				//changes text color of specific note being played
+				angular.element('.' + test + '.'+name).css('color', 'black');
+				setTimeout(function() {
+					angular.element('.' + test + '.'+name).css('color', 'white');
+				}, 140);
+				$scope.playBackNote(note.name);
+			}, note.time);
+		});
+	}
+
+	function playChords() {
+		$scope.chosenChords.forEach(function(chord, index) {
+			setTimeout(function() {
+				var name = $scope.assignClassName(chord.name);
+
+				angular.element('.' + name).css('color', 'black');
+				setTimeout(function() {
+					angular.element('.' + name).css('color', 'white');
+				}, 1100);
+
+				$scope.playChord(chord);
+			}, index*1100);
+		});
+	}
+
+	$scope.playSong = function() { //plays your chords + melody
+		var loops = $('input[id="loopNumber"]').val();
+
+		if ($scope.recordingNext) {
+			$scope.recordingNext = false;
+			recording = true;
+			melody = [];
+			startTime = new Date();
+			setTimeout(function() {
+				recording = false;
+			}, 4400);
 		}
 
-		for (var i = 0; i < $scope.chosenNotes.length * loopNumber; i++) {
-    	(function(index) {
-        setTimeout(function() {$scope.chosenNotes[index%8].audio.play()}, i * (tempo/2));
-    	})(i);
+		for(i=0; i<loops; i++) {
+			setTimeout(function() {
+				playMelody();
+				playChords();
+			}, (i * 4400));
 		}
 	};
 
@@ -111,6 +226,21 @@ module.exports = function(app) {
 		return className;
 	}
 
+	$scope.setNoteClass = function(string){
+		string = string.toLowerCase();
+		if(string.length > 1){
+			string = string.charAt(0) + "shrp";
+		}
+		string += 'note';
+		return string;
+	}
+
+	$scope.newNote = function(note){
+		var rename = note.name[0] + note.time;
+		return rename;
+
+	}
+
 	$scope.swapPositions = function(index, chord) { //swap position of two chords when you drag a chord onto another chord
 		if (chord.chosen) {
 			var otherChord = $scope.chosenChords[index];
@@ -120,15 +250,6 @@ module.exports = function(app) {
 		} else {
 			$scope.addChord(chord);
 		}
-	}
-
-	$scope.addNote = function(note) { //adds note to chosenNotes array
-		$scope.chosenNotes.push(note);
-	}
-
-	$scope.removeNote = function(note) { //removes note from chosenNotes array
-		var index = $scope.chosenNotes.indexOf(note);
-		$scope.chosenNotes.splice(index, 1);
 	}
 
 	$scope.addChord = function(chord) { //adds chord to chosenChords array, re-renders avaible chords/notes
@@ -176,10 +297,6 @@ module.exports = function(app) {
 			});
 		});
 		$scope.allowedNotes.sort();
-		$scope.allowedNotes2 = [];
-		notes.forEach(function(note) {
-			if ($scope.allowedNotes.indexOf(note.name) != -1) $scope.allowedNotes2.push(note);
-		});
 	}
 
 	function filterChords() { //renders available chords based on chosenChords
@@ -217,9 +334,6 @@ module.exports = function(app) {
 			$scope.allowedKeys.push(key)
 		});
 	};
-
-	/////////////////////////////////////////////Begin new features///////
-
 
 
 //end of main song app controller body
