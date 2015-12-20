@@ -3,10 +3,9 @@ var angular = window.angular;
 var BufferLoader = require('./buffer-loader');
 
 
-
 module.exports = function(app) {
 	app.controller('MusicController', ['$scope', '$http', function($scope, $http) {
-var startTime;
+	var startTime;
 	var keys = [
 		{name: 'A Major', notes: ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#']},
 		{name: 'B Flat Major', notes: ['A#', 'C', 'D', 'D#', 'F', 'G', 'A']},
@@ -59,7 +58,7 @@ var startTime;
 	var recording = false;
 	$scope.recordingNext = false;
 
-	$scope.context;
+	$scope.context; 
 	$scope.bufferLoader;
 	context = new AudioContext();
 
@@ -73,9 +72,14 @@ var startTime;
 		if (e.which == 106) $scope.playNote($scope.allowedNotes[6]);
 		if (e.which == 107) $scope.playNote($scope.allowedNotes[7]);
 		if (e.which == 108) $scope.playNote($scope.allowedNotes[8]);
-
+		
 		if (e.which == 32) $scope.playSong();
 	});
+
+	$scope.saveSong = function() {
+		var currUser = $('#currUser').html();
+		alert(currUser);
+	};
 
 	function removeSpaces (str){
 		return str.replace(/\s/g, '').toLowerCase();
@@ -92,7 +96,7 @@ var startTime;
     var sound = context.createBufferSource();
     sound.buffer = bufferList[0];
     sound.connect(context.destination);
-  	//Play
+  	//Play 
     sound.start(0);
 	};
 
@@ -108,7 +112,7 @@ var startTime;
     );
 
     bufferLoader.load();
-	};
+	}; 
 
 	$scope.playNote = function(note){
 	  if (recording) {
@@ -166,12 +170,12 @@ var startTime;
 	function playMelody() {
 		$scope.melody.forEach(function(note) {
 			setTimeout(function() {
-				var test = note.name;
-				test = test.toLowerCase();
+				var test = note.name; 
+				test = test.toLowerCase(); 
 				if(test.length > 1){
-					test = test.charAt(0);
+					test = test.charAt(0); 
 				}
-				var name = $scope.newNote(note);
+				var name = $scope.newNote(note);  
 				//changes text color of specific note being played
 				angular.element('.' + test + '.'+name).css('color', 'black');
 				setTimeout(function() {
@@ -181,7 +185,7 @@ var startTime;
 			}, note.time);
 		});
 	}
-
+	
 	function playChords() {
 		$scope.chosenChords.forEach(function(chord, index) {
 			setTimeout(function() {
@@ -191,15 +195,15 @@ var startTime;
 				setTimeout(function() {
 					angular.element('.' + name).css('color', 'white');
 				}, 1100);
-
-				$scope.playChord(chord);
+			
+				$scope.playChord(chord); 
 			}, index*1100);
 		});
 	}
 
 	$scope.playSong = function() { //plays your chords + melody
 		var loops = $('input[id="loopNumber"]').val();
-
+		
 		if ($scope.recordingNext) {
 			$scope.recordingNext = false;
 			recording = true;
@@ -229,15 +233,15 @@ var startTime;
 	$scope.setNoteClass = function(string){
 		string = string.toLowerCase();
 		if(string.length > 1){
-			string = string.charAt(0) + "shrp";
+			string = string.charAt(0) + "shrp"; 
 		}
-		string += 'note';
-		return string;
+		string += 'note'; 
+		return string; 
 	}
 
 	$scope.newNote = function(note){
-		var rename = note.name[0] + note.time;
-		return rename;
+		var rename = note.name[0] + note.time; 
+		return rename; 
 
 	}
 
@@ -285,7 +289,7 @@ var startTime;
 		keys.forEach(function(key) {
 			if (isArrayContained(notesUsed, key.notes)) {
 				$scope.allowedKeys.push(key);
-			}
+			} 
 		});
 	}
 
@@ -306,7 +310,7 @@ var startTime;
 				if ($scope.chosenChords.indexOf(chord) == -1) {
 					chord.chosen = false;
 					$scope.allowedChords.push(chord);
-				}
+				} 
 			}
 		});
 	}

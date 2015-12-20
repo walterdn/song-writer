@@ -49,10 +49,10 @@
 
       <div> Chosen Notes: </div>
       <div id="chosen-notes-container">
-        <div ng-repeat="note in melody track by $index"
-             class="chosen-notes" ng-class="assignClassName(note.name)"
+        <div ng-repeat="note in melody track by $index" 
+             class="chosen-notes" ng-class="[assignClassName(note.name), newNote(note)]"
              ng-style="{'left':'{{note.distance}}'}">
-          {{note.name}}
+          {{note.name}} 
         </div>
       </div>
 
